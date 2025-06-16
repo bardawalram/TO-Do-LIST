@@ -1,147 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List</title>
-    <style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stylish To-Do List</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(to right, #43cea2, #185a9d); /* Cool teal-blue gradient */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
 
     .container {
-        background: rgba(255, 255, 255, 0.95);
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0px 6px 15px rgba(0,0,0,0.2);
-        text-align: center;
-        width: 350px;
-        transition: transform 0.3s ease-in-out;
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.15);
+      width: 400px;
+      transition: all 0.3s ease-in-out;
     }
 
     .container:hover {
-        transform: scale(1.05);
+      transform: scale(1.02);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #ff6f61;
     }
 
     input, select {
-        padding: 10px;
-        margin: 5px;
-        width: 80%;
-        border-radius: 6px;
-        border: 1px solid #bbb;
-        outline: none;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: all 0.2s;
+    }
+
+    input:focus, select:focus {
+      border-color: #ff6f61;
+      outline: none;
+      box-shadow: 0 0 5px rgba(255, 111, 97, 0.4);
     }
 
     button {
-        padding: 10px;
-        background: #38b000;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 6px;
-        transition: background 0.3s;
+      width: 100%;
+      padding: 12px;
+      background: #ff6f61;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
     }
 
     button:hover {
-        background: #70e000;
+      background: #ff9472;
     }
 
     ul {
-        list-style-type: none;
-        padding: 0;
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
     }
 
     li {
-        background: #f2f2f2;
-        margin: 6px 0;
-        padding: 10px;
-        border-radius: 6px;
-        display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        transition: background 0.3s;
+      background: #f9f9f9;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      position: relative;
+      transition: background 0.3s;
     }
 
     li:hover {
-        background: #cbe4f9;
+      background: #ffe6e1;
     }
 
-    .completed {
-        text-decoration: line-through;
-        color: gray;
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 12px;
+      border-radius: 12px;
+      color: white;
+      margin-left: 5px;
+    }
+
+    .High {
+      background-color: #d00000;
+    }
+
+    .Medium {
+      background-color: #f48c06;
+    }
+
+    .Low {
+      background-color: #40916c;
     }
 
     small {
-        color: #333;
-        margin-top: 4px;
+      display: block;
+      margin-top: 6px;
+      color: #333;
     }
-    </style>
+
+    .delete-btn {
+      margin-top: 10px;
+      background: #6c757d;
+      padding: 8px;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+
+    .delete-btn:hover {
+      background: #495057;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1 style="color:#185a9d;">To-Do List</h1>
-        <input type="text" id="taskInput" placeholder="Task Name">
-        <input type="date" id="deadlineInput">
-        <select id="priorityInput">
-            <option value="High">High Priority</option>
-            <option value="Medium">Medium Priority</option>
-            <option value="Low">Low Priority</option>
-        </select>
-        <button onclick="addTask()">Add Task</button>
-        <ul id="taskList"></ul>
-    </div>
+  <div class="container">
+    <h1>📝 To-Do List</h1>
+    <input type="text" id="taskInput" placeholder="Task Name" />
+    <input type="date" id="deadlineInput" />
+    <select id="priorityInput">
+      <option value="High">High Priority</option>
+      <option value="Medium">Medium Priority</option>
+      <option value="Low">Low Priority</option>
+    </select>
+    <button onclick="addTask()">➕ Add Task</button>
+    <ul id="taskList"></ul>
+  </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", loadTasks);
+  <script>
+    document.addEventListener("DOMContentLoaded", loadTasks);
 
-        function addTask() {
-            let taskInput = document.getElementById("taskInput").value.trim();
-            let deadlineInput = document.getElementById("deadlineInput").value;
-            let priorityInput = document.getElementById("priorityInput").value;
-            
-            if (taskInput === "") return;
+    function addTask() {
+      const taskInput = document.getElementById("taskInput").value.trim();
+      const deadlineInput = document.getElementById("deadlineInput").value;
+      const priorityInput = document.getElementById("priorityInput").value;
 
-            let task = { text: taskInput, deadline: deadlineInput, priority: priorityInput };
-            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-            tasks.push(task);
-            localStorage.setItem("tasks", JSON.stringify(tasks));
+      if (taskInput === "") return;
 
-            displayTasks();
-        }
+      const task = { text: taskInput, deadline: deadlineInput, priority: priorityInput };
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      tasks.push(task);
+      localStorage.setItem("tasks", JSON.stringify(tasks));
 
-        function displayTasks() {
-            let taskList = document.getElementById("taskList");
-            taskList.innerHTML = "";
-            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      displayTasks();
+      document.getElementById("taskInput").value = "";
+      document.getElementById("deadlineInput").value = "";
+      document.getElementById("priorityInput").value = "High";
+    }
 
-            tasks.forEach((task, index) => {
-                let li = document.createElement("li");
-                li.innerHTML = `<strong>${task.text}</strong> 
-                                <small>Deadline: ${task.deadline} | Priority: ${task.priority}</small>`;
+    function displayTasks() {
+      const taskList = document.getElementById("taskList");
+      taskList.innerHTML = "";
+      const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-                let deleteBtn = document.createElement("button");
-                deleteBtn.textContent = "Delete";
-                deleteBtn.style.marginTop = "8px";
-                deleteBtn.onclick = function() {
-                    tasks.splice(index, 1);
-                    localStorage.setItem("tasks", JSON.stringify(tasks));
-                    displayTasks();
-                };
+      tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <strong>${task.text} 
+            <span class="badge ${task.priority}">${task.priority}</span>
+          </strong>
+          <small>📅 Deadline: ${task.deadline || "No deadline"}</small>
+        `;
 
-                li.appendChild(deleteBtn);
-                taskList.appendChild(li);
-            });
-        }
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "🗑 Delete Task";
+        deleteBtn.className = "delete-btn";
+        deleteBtn.onclick = function () {
+          tasks.splice(index, 1);
+          localStorage.setItem("tasks", JSON.stringify(tasks));
+          displayTasks();
+        };
 
-        function loadTasks() {
-            displayTasks();
-        }
-    </script>
+        li.appendChild(deleteBtn);
+        taskList.appendChild(li);
+      });
+    }
+
+    function loadTasks() {
+      displayTasks();
+    }
+  </script>
 </body>
 </html>
